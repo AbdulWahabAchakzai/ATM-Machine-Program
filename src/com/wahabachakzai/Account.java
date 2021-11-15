@@ -1,5 +1,6 @@
 package com.wahabachakzai;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,7 +13,7 @@ public class Account {
     private double savingBalance = 0;
 
     Scanner input = new Scanner(System.in);
-    DecimalFormat moneyFormat = new DecimalFormat("'$' ###,##0,00");
+    DecimalFormat moneyFormat = new DecimalFormat("'$' ###,##0.00");
 
 
     public Account(){
@@ -48,33 +49,35 @@ public class Account {
 
     public int getPinNumber(){  return pinNumber; }
 
-    public double getCheckingBalance(){ return checkingBalance;}
+    public double getCheckingBalance() {
+        return checkingBalance;
+    }
 
     public double getSavingBalance(){return savingBalance; }
 
     public double calcCheckingWithdraw(double amount){
-        savingBalance = (checkingBalance - amount);
-        return savingBalance;
+        checkingBalance = (checkingBalance - amount);
+        return checkingBalance;
     }
 
     public double calcSavingWithdraw(double amount){
-        savingBalance = savingBalance - amount;
+        savingBalance = (savingBalance - amount);
         return  savingBalance;
     }
 
     public double calcCheckingDeposit(double amount){
-        checkingBalance = checkingBalance + amount;
+        checkingBalance =( checkingBalance + amount);
         return checkingBalance;
     }
 
     public double calcSavingDeposit(double amount){
-        savingBalance = savingBalance + amount;
+        savingBalance = (savingBalance + amount);
         return amount;
     }
 
-    public double calcCheckTransfer(double amount){
+    public void calcCheckTransfer(double amount){
+        checkingBalance = checkingBalance - amount;
         savingBalance = savingBalance + amount;
-        return savingBalance;
     }
 
     public void calcSavingTransfer(double amount){
@@ -148,10 +151,103 @@ public class Account {
                 }
             }catch(InputMismatchException e){
                 System.out.println("\n Invalid Choice");
-                end=true;
+                input.next();
             }
         }
+    }
 
+
+    public void getSavingDepositInput(){
+        System.out.println("\n *** Welcome to Savings Deposit ***");
+        boolean end = false;
+
+        while(!end){
+            try{
+                System.out.println("\n Current savings Account Balance: "+ moneyFormat.format(savingBalance));
+                System.out.println("\n Amount you want to deposit into your savings account: ");
+                double amount = input.nextDouble();
+
+                if((savingBalance + amount) >= 0 && amount > 0 ){
+                    calcSavingDeposit(amount);
+                    System.out.println("\n Current savings Account Balance: "+ moneyFormat.format(savingBalance));
+                    end = true;
+                }else{
+                    System.out.println("\n !!! Balance can not be negative !!!");
+                }
+            }catch(InputMismatchException e){
+                System.out.println("\n Invalid Choice !!!");
+                input.next();
+            }
+        }
+    }
+
+
+    public void getTransferInput(String accountType){
+        boolean end = false;
+        System.out.println("\n *** Welcome to Transfer Section ***");
+
+        while(!end){
+            try{
+                if(accountType.equals("Checkings")){
+                    System.out.println("\n Select an account you wish to transfer funds to:");
+                    System.out.println("1. Savings");
+                    System.out.println("2. Exit");
+                    System.out.println("\n Choice:");
+                    int choice = input.nextInt();
+
+                    switch(choice){
+                        case 1:
+                            System.out.println("\n Current checkings account balance: " + moneyFormat.format(checkingBalance));
+                            System.out.println("\n Amount you want to deposite into your account: ");
+                            double amount = input.nextDouble();
+
+                            if((savingBalance + amount) >= 0 && (checkingBalance - amount) >= 0 && amount >= 0 ){
+                                calcCheckTransfer(amount);
+                                System.out.println("\n Current Savings Account Balance: " + moneyFormat.format(savingBalance));
+                                System.out.println("\n Current checkings Account Balance: "+ moneyFormat.format(checkingBalance));
+                                end = true;
+                            }else{
+                                System.out.println("\n !!! Balance can not be negative !!!");
+                            }
+                        case 2:
+                            return;
+                        default:
+                            System.out.println("\n Invalid Choice");
+                            break;
+                    }
+                }else if(accountType.equals("Savings")){
+                    System.out.println("\n Select an Account you wish to transfer fund to :");
+                    System.out.println("\n 1. Checkings");
+                    System.out.println("\n 2. Exit");
+                    System.out.println("\n Choice:");
+                    int choice = input.nextInt();
+
+                    switch(choice){
+                        case 1:
+                            System.out.println("\n Your Savings Account Balance is: " + moneyFormat.format(savingBalance));
+                            System.out.println("\n Amount you want to deposit to your savings account: ");
+                            double amount = input.nextDouble();
+
+                            if((checkingBalance + amount) >= 0 && (savingBalance - amount) >= 0 && amount >= 0 ){
+                                calcSavingTransfer(amount);
+                                System.out.println("\n Current checkings account balance: " + moneyFormat.format(checkingBalance));
+                                System.out.println("\n Current savings account balance: "+ moneyFormat.format(savingBalance));
+                                end = true;
+                            }else{
+                                System.out.println("\n Balance can not be negative");
+                            }
+                        case 2:
+                            return;
+                        default:
+                            System.out.println("\n !!! Invalid Choice !!!");
+                            break;
+                    }
+                }
+            }catch(InputMismatchException e){
+                System.out.println("\n Invalid Choice.");
+                input.next();
+            }
+        }
     }
 
 

@@ -1,9 +1,4 @@
 package com.wahabachakzai;
-
-
-import com.sun.security.jgss.GSSUtil;
-
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -17,7 +12,7 @@ public class MenuOptions{
 
 
 
-    public void getLogin(){
+    public void getLogin() throws IOException{
        boolean end = false;
        int customerNo = 0;
        int pinCode = 0;
@@ -61,31 +56,29 @@ public class MenuOptions{
                 System.out.println("Type 2 - Savings Account");
                 System.out.println("Type 3 - Exit");
                 System.out.print("Your Choice: ");
+
                 int accountType = menuInput.nextInt();
 
                 switch(accountType){
-
                     case(1):
                         getCheckingAccount(acc);
                         end = true;
                         break;
                     case(2):
-                        getSavingAccount();
+                        getSavingAccount(acc);
                         end = true;
                         break;
                     default:
                         System.out.println("\n Invalid Choice");
                 }
-
             }catch(InputMismatchException e){
                 System.out.println("Invalid Choice");
                 menuInput.next();
             }
         }
-
     }
 
-    public void getCheckingAccount(Account account){
+    public void getCheckingAccount(Account account) {
         boolean end = false;
 
         System.out.println("\n ___ Welcome to Checkings Account ___");
@@ -114,7 +107,7 @@ public class MenuOptions{
                         end = true;
                         break;
                     case 4:
-                        System.out.println("This is Transfer Funds");
+                        account.getCheckingDepositInput();
                         end = true;
                         break;
                     case 5:
@@ -133,8 +126,44 @@ public class MenuOptions{
 
 
 
-    public void getSavingAccount(){
+    public void getSavingAccount(Account acc){
+        boolean end = false;
+
         System.out.println("\n ___Welcome to Savings Account___");
+
+        while(!end){
+            try{
+                System.out.println("Savings Account: ");
+                System.out.println("Type 1 - View Balance");
+                System.out.println("Type 2 - Withdraw Funds");
+                System.out.println("Type 3 - Deposit Funds");
+                System.out.println("Type 4 - Transfer Funds");
+                System.out.println("Type 5 - Exit");
+                System.out.print("Choice: ");
+                int choice = menuInput.nextInt();
+
+                switch (choice){
+                    case 1:
+                        System.out.println("\n Savings Account Balance: " + moneyFormat.format(acc.getSavingBalance()));
+                        break;
+                    case 2:
+                        acc.getCheckingWithdrawInput();
+                        break;
+                    case 3:
+                        acc.getCheckingDepositInput();
+                    case 4:
+                        acc.getTransferInput("Savings");
+                    case 5:
+                        end = true;
+                        break;
+                    default:
+                        System.out.println("\n !!! Invalid Choice");
+                }
+            }catch(InputMismatchException e){
+                System.out.println("\n !!! Invalid choice !!!");
+                menuInput.next();
+            }
+        }
     }
 
 
@@ -177,36 +206,35 @@ public class MenuOptions{
         data.put(121212, new Account(1111, 123456, 4000, 5000  ));
         data.put(222222, new Account(2222, 654321, 3000, 6000 ));
         boolean end = false;
-            try{
-                System.out.println("Type 1: Login ");
-                System.out.println("Type 2: Create Account \n");
-                System.out.print(" Choice: ");
-                int choice = menuInput.nextInt();
+            while(!end){
+                try{
+                    System.out.println("Type 1: Login ");
+                    System.out.println("Type 2: Create Account \n");
+                    System.out.print(" Choice: ");
+                    int choice = menuInput.nextInt();
 
-                switch(choice){
-                    case(1):
-                        getLogin();
-                        end = true;
-                        break;
+                    switch(choice){
+                        case(1):
+                            getLogin();
+                            end = true;
+                            break;
 
-                    case(2):
-                        createAccount();
-                        end = true;
-                        break;
+                        case(2):
+                            createAccount();
+                            end = true;
+                            break;
 
-                    default:
-                        System.out.println("\n Invalid choice !!!");
-                        menuInput.next();
+                        default:
+                            System.out.println("\n Invalid choice !!!");
+                            menuInput.next();
+                    }
+                }catch(InputMismatchException e){
+                    System.out.println(e.getMessage());
+                    menuInput.next();
                 }
-            }catch(InputMismatchException e){
-                System.out.println(e.getMessage());
-                menuInput.close();
-                System.exit(0);
             }
+        System.out.println("-- THANK YOU ---");
+        menuInput.close();
+        System.exit(0);
         }
-
-
-
-
-
 }
