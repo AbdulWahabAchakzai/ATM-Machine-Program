@@ -1,2 +1,4 @@
 # ATM-Machine-Program
-Command line ATM machine program, written in java.
+Java command line ATM Machine program.
+
+
