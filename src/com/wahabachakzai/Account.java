@@ -49,8 +49,8 @@ public class Account {
 
     public int getPinNumber(){  return pinNumber; }
 
-    public double getCheckingBalance() {
-        return checkingBalance;
+    public double getCheckingBalance()  {
+        return checkingBalance ;
     }
 
     public double getSavingBalance(){return savingBalance; }
@@ -92,7 +92,7 @@ public class Account {
         while(!end){
             try{
                 System.out.println(String.format("\n Current Checking Balance = " + moneyFormat.format(checkingBalance)));
-                System.out.println("\n Money you want to withdraw from checking ");
+                System.out.print("\n Money you want to withdraw from checking: ");
                 double amount = input.nextDouble();
                 if((checkingBalance - amount) >= 0 && amount > 0 ){
                     calcCheckingWithdraw(amount);

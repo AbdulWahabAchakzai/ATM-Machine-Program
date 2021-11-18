@@ -14,22 +14,22 @@ public class MenuOptions{
 
     public void getLogin() throws IOException{
        boolean end = false;
-       int customerNo = 0;
-       int pinCode = 0;
+       int customerNumber = 0;
+       int pinNumber = 0;
 
        while(!end){
            try {
                System.out.print("\n Enter your customer number: ");
-               customerNo = menuInput.nextInt();
+               customerNumber = menuInput.nextInt();
                System.out.print("\n Enter your PIN code: ");
-               pinCode = menuInput.nextInt();
+               pinNumber = menuInput.nextInt();
 
                Iterator it = data.entrySet().iterator();
                while(it.hasNext()){
                 Map.Entry pair = (Map.Entry)it.next();
-                Account acc = (Account)pair.getValue();
-                if(data.containsKey(customerNo) && pinCode == acc.getPinNumber()){
-                    getAccountType(null);
+                Account acc = (Account) pair.getValue();
+                if(data.containsKey(customerNumber) && pinNumber == acc.getPinNumber()){
+                    getAccountType(acc);
                     end = true;
                     break;
                 }
@@ -96,19 +96,16 @@ public class MenuOptions{
 
                 switch(choice){
                     case 1:
-                        System.out.println("\n Checking Account Balance: "+ moneyFormat.format(account.getCheckingBalance()));
+                        System.out.println("\n Checking Account Balance is: " + moneyFormat.format(account.getCheckingBalance()));
                         break;
                     case 2:
                         account.getCheckingWithdrawInput();
-                        end = true;
                         break;
                     case 3:
                         account.getCheckingDepositInput();
-                        end = true;
                         break;
                     case 4:
                         account.getCheckingDepositInput();
-                        end = true;
                         break;
                     case 5:
                         System.out.println("Exiting --->>>");
@@ -151,8 +148,10 @@ public class MenuOptions{
                         break;
                     case 3:
                         acc.getCheckingDepositInput();
+                        break;
                     case 4:
                         acc.getTransferInput("Savings");
+                        break;
                     case 5:
                         end = true;
                         break;
@@ -169,20 +168,21 @@ public class MenuOptions{
 
 
     public void createAccount() throws IOException{
-        int customerAccountNo = 0;
+        int customerNo = 0;
         boolean end = false;
 
         while(!end){
             try{
                 System.out.print("\n Enter your customer number: ");
-                customerAccountNo = menuInput.nextInt();
+                customerNo = menuInput.nextInt();
                 Iterator it = data.entrySet().iterator();
                 while(it.hasNext()){
                     Map.Entry pair = (Map.Entry) it.next();
-                    if(!data.containsKey(customerAccountNo)){
+                    if(!data.containsKey(customerNo)){
                         end = true;
                     }
-                }if(!end){
+                }
+                if(!end){
                     System.out.println("\n This customer number is already registered");
                 }
             }catch(InputMismatchException e){
@@ -192,7 +192,7 @@ public class MenuOptions{
         }
         System.out.print("\n Enter PIN number to get registered: ");
         int pin = menuInput.nextInt();
-        data.put(customerAccountNo, new Account(customerAccountNo, pin));
+        data.put(customerNo, new Account(customerNo, pin));
         System.out.println("\n Your new account has been successfuly registered!");
         System.out.println("\n Redirecting to Login ------->>>>>");
         getLogin();
@@ -214,16 +214,14 @@ public class MenuOptions{
                     int choice = menuInput.nextInt();
 
                     switch(choice){
-                        case(1):
+                        case 1:
                             getLogin();
                             end = true;
                             break;
-
-                        case(2):
+                        case 2:
                             createAccount();
                             end = true;
                             break;
-
                         default:
                             System.out.println("\n Invalid choice !!!");
                             menuInput.next();
