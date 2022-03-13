@@ -1,4 +1,4 @@
 # ATM-Machine-Program
-Java command line ATM Machine program.
+Command line ATM Machine program.
 
 
